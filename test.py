@@ -5,8 +5,8 @@ from training_phase import *
 from model_evaluation import *
 
 # If you want to see visualziation use this lines
-# visualise_features()
-# visualize_decision_boundary()
+visualise_features()
+visualize_decision_boundary()
 
 
 class TestFeatureExtraction(unittest.TestCase):

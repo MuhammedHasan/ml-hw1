@@ -30,15 +30,15 @@ def visualise_features():
        examples using the features you defined before
        """
 
-    X, y = read_featurize_set()
-    positives_X = map(lambda x: x[0], filter(lambda t: t[1] > 0, zip(X, y)))
-    negative_X = map(lambda x: x[0], filter(lambda t: t[1] < 0, zip(X, y)))
-    positives_X, negative_X = np.array(positives_X), np.array(negative_X)
+    train_positives = pickle.load(open('training_set_positives.p', 'rb'))
+    train_negatives = pickle.load(open('training_set_negatives.p', 'rb'))
 
-    plt.scatter(positives_X[:, 0], positives_X[:, 1],
+    plt.scatter([feature1(v) for _, v in train_positives.items()],
+                [feature2(v) for _, v in train_positives.items()],
                 color='blue', marker='x', label='positives')
 
-    plt.scatter(negative_X[:, 0], negative_X[:, 1],
+    plt.scatter([feature1(v) for _, v in train_negatives.items()],
+                [feature2(v) for _, v in train_negatives.items()],
                 color='red', marker='o', label='negatives')
 
     plt.xlabel('feature1')
