@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import itertools
+from itertools import groupby
 
 
 def feature1(x):
@@ -25,5 +25,4 @@ def feature2(x):
        -------
        feature2_value: type-float
        """
-
-    return sum(max(len(list(v)) * k for k, v in itertools.groupby(z)) for z in x)
+    return sum(max(len(list(v)) * k for k, v in groupby(z)) for z in x)

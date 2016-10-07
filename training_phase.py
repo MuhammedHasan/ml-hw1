@@ -9,20 +9,36 @@ from perceptron_classifier import *
 from feature_extraction import *
 
 
+def read_featurize_set(set_name="training"):
+    train_positives = pickle.load(open(set_name + '_set_positives.p', 'rb'))
+    train_negatives = pickle.load(open(set_name + '_set_negatives.p', 'rb'))
+
+    train_positives = [(1, x) for _, x in train_positives.items()]
+    train_negatives = [(-1, x) for _, x in train_negatives.items()]
+
+    train = train_positives + train_negatives
+
+    Xy = np.array([[feature1(v), feature2(v), k] for k, v in train])
+    X = Xy[:, :2]
+    y = Xy[:, -1]
+
+    return (X, y)
+
+
 def visualise_features():
     """This function should generate a scatterplot for all the training
        examples using the features you defined before
        """
 
-    train_positives = pickle.load(open('training_set_positives.p', 'rb'))
-    train_negatives = pickle.load(open('training_set_negatives.p', 'rb'))
+    X, y = read_featurize_set()
+    positives_X = map(lambda x: x[0], filter(lambda t: t[1] > 0, zip(X, y)))
+    negative_X = map(lambda x: x[0], filter(lambda t: t[1] < 0, zip(X, y)))
+    positives_X, negative_X = np.array(positives_X), np.array(negative_X)
 
-    plt.scatter([feature1(v) for _, v in train_positives.items()],
-                [feature2(v) for _, v in train_positives.items()],
+    plt.scatter(positives_X[:, 0], positives_X[:, 1],
                 color='blue', marker='x', label='positives')
 
-    plt.scatter([feature1(v) for _, v in train_negatives.items()],
-                [feature2(v) for _, v in train_negatives.items()],
+    plt.scatter(negative_X[:, 0], negative_X[:, 1],
                 color='red', marker='o', label='negatives')
 
     plt.xlabel('feature1')
@@ -42,17 +58,7 @@ def train_classifier():
        -------
        weights: from the perceptron classifier
        """
-    train_positives = pickle.load(open('training_set_positives.p', 'rb'))
-    train_negatives = pickle.load(open('training_set_negatives.p', 'rb'))
-
-    train_positives = [(1, x) for _, x in train_positives.items()]
-    train_negatives = [(-1, x) for _, x in train_negatives.items()]
-
-    train = train_positives + train_negatives
-
-    Xy = np.array([[feature1(v), feature2(v), k] for k, v in train])
-    X = Xy[:, :2]
-    y = Xy[:, -1]
+    X, y = read_featurize_set()
 
     p = Perceptron(eta=0.1, n_iter=1000)
     p.fit(X, y)
@@ -64,22 +70,10 @@ def visualize_decision_boundary():
     """Using the weights learnt by your classifier, a call to this function
        should plot the decision boundary over the dataser"""
 
-    train_positives = pickle.load(open('training_set_positives.p', 'rb'))
-    train_negatives = pickle.load(open('training_set_negatives.p', 'rb'))
-
-    train_positives = [(1, x) for _, x in train_positives.items()]
-    train_negatives = [(-1, x) for _, x in train_negatives.items()]
-
-    train = train_positives + train_negatives
-
-    Xy = np.array([[feature1(v), feature2(v), k] for k, v in train])
-    X = Xy[:, :2]
-    y = Xy[:, -1]
+    X, y = read_featurize_set()
 
     ppn = Perceptron(eta=0.1, n_iter=1000)
     ppn.fit(X, y)
-
-    print ppn.w_
 
     def plot_decision_regions(X, y, classifier, resolution=0.001):
 
@@ -111,7 +105,6 @@ def visualize_decision_boundary():
     plt.legend(loc='upper left')
 
     plt.tight_layout()
-    # plt.savefig('./perceptron_2.png', dpi=300)
     plt.show()
 
     return
