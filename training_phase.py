@@ -78,8 +78,8 @@ def visualize_decision_boundary():
     def plot_decision_regions(X, y, classifier, resolution=0.001):
 
         # setup marker generator and color map
-        markers = ('s', 'x', 'o', '^', 'v')
-        colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
+        markers = ('o', 'x', 's', '^', 'v')
+        colors = ('green', 'blue', 'lightgreen', 'cyan', 'red')
         cmap = ListedColormap(colors[:len(np.unique(y))])
 
         # plot the decision surface
@@ -100,8 +100,8 @@ def visualize_decision_boundary():
                         marker=markers[idx], label=cl)
 
     plot_decision_regions(X, y, classifier=ppn)
-    plt.xlabel('sepal length [cm]')
-    plt.ylabel('petal length [cm]')
+    plt.xlabel('feature1')
+    plt.ylabel('feature2')
     plt.legend(loc='upper left')
 
     plt.tight_layout()
